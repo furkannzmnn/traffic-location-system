@@ -1,0 +1,26 @@
+package com.example.trafficlocationsystem.aggregate.preferences;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public abstract class AbstractAggregatePreferences<T> {
+
+    protected static final Logger LOGGER = LoggerFactory.getLogger(AbstractAggregatePreferences.class);
+    protected static final String EMPTY_DEVICE_NOT_FOUND = "NOT RESOLVER DEVICE INFO";
+
+
+    public void completeProcess(T request) {
+        final String info = onlyPreferences(request);
+        logger(info);
+    }
+
+    public static <T> AbstractAggregatePreferences<T> resolvePreferencesType(boolean isDevice) {
+        if (isDevice) {
+            return new OnlyDeviceResolver<>();
+        }
+        return new OnlyLocationResolver<>();
+    }
+
+    public abstract String onlyPreferences(T request);
+    public abstract void logger(String info);
+}
