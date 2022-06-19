@@ -1,26 +1,20 @@
 package com.example.trafficlocationsystem.aggregate;
 
 import com.example.trafficlocationsystem.aggregate.preferences.AbstractAggregatePreferences;
+import com.example.trafficlocationsystem.aggregate.retry.AggregateRetry;
 import com.example.trafficlocationsystem.annatotion.AggregateData;
-import com.example.trafficlocationsystem.service.SendDataTopic;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpRequest;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Parameter;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 @Aspect
 @Component
@@ -28,17 +22,22 @@ public class AggregateDataAspect {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AggregateDataAspect.class);
 
-    private final SendDataTopic sendDataTopic;
+    private final AggregateRetry aggregateRetry;
+    private final ThreadPoolTaskScheduler taskScheduler;
 
-    public AggregateDataAspect(SendDataTopic sendDataTopic) {
-        this.sendDataTopic = sendDataTopic;
+    public AggregateDataAspect(AggregateRetry aggregateRetry, ThreadPoolTaskScheduler taskScheduler) {
+        this.aggregateRetry = aggregateRetry;
+        this.taskScheduler = taskScheduler;
     }
 
 
     @Around("@annotation(com.example.trafficlocationsystem.annatotion.AggregateData)")
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
-
-        CompletableFuture.runAsync(() -> sendData(joinPoint));
+        try {
+            sendData(joinPoint);
+        }catch (Exception e){
+            taskScheduler.submit(() -> aggregateRetry.retry(() -> sendData(joinPoint)));
+        }
         return joinPoint.proceed();
     }
 

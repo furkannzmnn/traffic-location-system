@@ -21,6 +21,7 @@ public class SendDataTopic {
         System.out.println("Send data to topic: " + data);
     }
 
+
     public void sendDataFromKafka(Object data) {
         Map<Integer, String> map = (Map<Integer, String>) data;
 
