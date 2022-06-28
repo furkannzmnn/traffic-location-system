@@ -5,15 +5,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import java.lang.annotation.Annotation;
 import java.util.Map;
-import java.util.Random;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class GetMappingResolver extends AbstractAnnotationResolver {
     @Override
-    public Map<Integer, String> resolve(Annotation annotation) {
+    public Map<String, String> resolve(Annotation annotation, Map<String, String> map) {
         GetMapping getMapping = (GetMapping) annotation;
-        Map<Integer, String> map = new ConcurrentHashMap<>();
-        map.put(new Random().nextInt(), getMapping.value()[0]);
+        map.put("GET", getMapping.value()[0]);
         return map;
     }
 

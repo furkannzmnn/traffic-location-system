@@ -3,24 +3,25 @@ package com.example.trafficlocationsystem.aggregate.preferences;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Map;
+
 public abstract class AbstractAggregatePreferences<T> {
 
     protected static final Logger LOGGER = LoggerFactory.getLogger(AbstractAggregatePreferences.class);
     protected static final String EMPTY_DEVICE_NOT_FOUND = "NOT RESOLVER DEVICE INFO";
 
 
-    public void completeProcess(T request) {
-        final String info = onlyPreferences(request);
+    public void completeProcess(T request, Map<String, String> totalData) {
+        final String info = onlyPreferences(request,totalData);
         logger(info);
     }
 
-    public static <T> AbstractAggregatePreferences<T> resolvePreferencesType(boolean isDevice) {
-        if (isDevice) {
-            return new OnlyDeviceResolver<>();
-        }
-        return new OnlyLocationResolver<>();
+    public static <T> AbstractAggregatePreferences<T> resolvePreferencesType(boolean isDevice, boolean isLocation) {
+        if (isDevice) return new OnlyDeviceResolver<>();
+        else if (isLocation) return new OnlyLocationResolver<>();
+        else return new BothResolver<>();
     }
 
-    public abstract String onlyPreferences(T request);
+    public abstract String onlyPreferences(T request, Map<String, String> totalData);
     public abstract void logger(String info);
 }

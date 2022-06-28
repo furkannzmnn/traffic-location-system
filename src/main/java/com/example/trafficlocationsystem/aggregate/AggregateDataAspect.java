@@ -4,7 +4,6 @@ import com.example.trafficlocationsystem.aggregate.preferences.AbstractAggregate
 import com.example.trafficlocationsystem.aggregate.retry.AggregateRetry;
 import com.example.trafficlocationsystem.annatotion.AggregateData;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
@@ -15,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import java.lang.annotation.Annotation;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Aspect
 @Component
@@ -24,6 +24,8 @@ public class AggregateDataAspect {
 
     private final AggregateRetry aggregateRetry;
     private final ThreadPoolTaskScheduler taskScheduler;
+
+    private final Map<String, String> totalData = new ConcurrentHashMap<>();
 
     public AggregateDataAspect(AggregateRetry aggregateRetry, ThreadPoolTaskScheduler taskScheduler) {
         this.aggregateRetry = aggregateRetry;
@@ -49,27 +51,25 @@ public class AggregateDataAspect {
         AggregateData aggregateData = methodSignature.getMethod().getAnnotation(AggregateData.class);
 
         final boolean onlyDevice = aggregateData.onlyDevice();
+        final boolean onlyLocation = aggregateData.onlyLocation();
 
         if (onlyDevice) {
-            LOGGER.info("Only device");
             Object[] signatureArgs = joinPoint.getArgs();
             for (Object each : signatureArgs) {
-                final AbstractAggregatePreferences<Object> preferences = AbstractAggregatePreferences.resolvePreferencesType(onlyDevice);
-                preferences.completeProcess(each);
+                final AbstractAggregatePreferences<Object> preferences = AbstractAggregatePreferences.resolvePreferencesType(onlyDevice, onlyLocation) ;
+                preferences.completeProcess(each, totalData);
             }
         }
 
         Annotation[] annotations = methodSignature.getMethod().getAnnotations();
 
-
         try {
             for (Annotation annotation : annotations) {
                 AbstractAnnotationResolver abstractAnnotationResolver = AbstractAnnotationResolver.getResolver(annotation);
                 if (abstractAnnotationResolver != null) {
-                    Map<Integer, String> map = abstractAnnotationResolver.type(annotation);
+                    Map<String , String> map = abstractAnnotationResolver.type(annotation, totalData);
                     if (map != null) {
-                       // sendDataTopic.sendDataFromKafka(map);
-                        for (Map.Entry<Integer, String> entry : map.entrySet()) {
+                        for (Map.Entry<String, String> entry : map.entrySet()) {
                             LOGGER.info("Key: " + entry.getKey() + " Value: " + entry.getValue());
                         }
                     }

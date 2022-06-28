@@ -5,15 +5,12 @@ import org.springframework.web.bind.annotation.PatchMapping;
 
 import java.lang.annotation.Annotation;
 import java.util.Map;
-import java.util.Random;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class PatchMappingResolver extends AbstractAnnotationResolver {
     @Override
-    public Map<Integer, String> resolve(Annotation annotation) {
+    public Map<String, String> resolve(Annotation annotation, Map<String, String> map) {
         PatchMapping patchMapping = (PatchMapping) annotation;
-        Map<Integer, String> map = new ConcurrentHashMap<>();
-        map.put(new Random().nextInt(), patchMapping.value()[0]);
+        map.put("PATCH", patchMapping.value()[0]);
         return map;
     }
 
