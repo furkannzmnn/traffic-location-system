@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.annotation.Annotation;
+import java.util.HashMap;
 import java.util.Map;
 
 public abstract class AbstractAnnotationResolver {
@@ -32,14 +33,14 @@ public abstract class AbstractAnnotationResolver {
         }
     }
 
-    public Map<Integer, String> type(Annotation annotation) {
+    public Map<String, String> type(Annotation annotation, HashMap<String, String> totalData) {
         if (supports(annotation)) {
-            return resolve(annotation);
+            return resolve(annotation,totalData);
         }
         return null;
     }
 
-    public abstract Map<Integer, String> resolve(Annotation annotation);
+    public abstract Map<String, String> resolve(Annotation annotation, HashMap<String, String> totalData);
     public abstract boolean supports(Annotation annotation);
 
 }

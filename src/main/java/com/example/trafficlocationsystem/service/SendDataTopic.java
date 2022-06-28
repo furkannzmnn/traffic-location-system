@@ -1,5 +1,6 @@
 package com.example.trafficlocationsystem.service;
 
+import org.apache.kafka.common.KafkaException;
 import org.apache.kafka.common.protocol.types.Field;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
@@ -19,6 +20,10 @@ public class SendDataTopic {
 
     public void sendData(String data) {
         System.out.println("Send data to topic: " + data);
+
+        final Map<String, String> key = Map.of("device_name", data);
+
+        sendDataFromKafka(key);
     }
 
 

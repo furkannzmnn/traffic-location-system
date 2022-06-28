@@ -4,16 +4,16 @@ import com.example.trafficlocationsystem.aggregate.AbstractAnnotationResolver;
 import org.springframework.web.bind.annotation.DeleteMapping;
 
 import java.lang.annotation.Annotation;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class DeleteMappingResolver extends AbstractAnnotationResolver {
     @Override
-    public Map<Integer, String> resolve(Annotation annotation) {
+    public Map<String, String> resolve(Annotation annotation, HashMap<String, String> map ) {
         DeleteMapping deleteMapping = (DeleteMapping) annotation;
-        Map<Integer, String> map = new ConcurrentHashMap<>();
-        map.put(new Random().nextInt(), deleteMapping.value()[0]);
+        map.put("DELETE", deleteMapping.value()[0]);
         return map;
     }
 
