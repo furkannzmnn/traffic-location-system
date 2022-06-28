@@ -33,14 +33,14 @@ public abstract class AbstractAnnotationResolver {
         }
     }
 
-    public Map<String, String> type(Annotation annotation, HashMap<String, String> totalData) {
+    public Map<String, String> type(Annotation annotation, Map<String, String> totalData) {
         if (supports(annotation)) {
             return resolve(annotation,totalData);
         }
         return null;
     }
 
-    public abstract Map<String, String> resolve(Annotation annotation, HashMap<String, String> totalData);
+    public abstract Map<String, String> resolve(Annotation annotation, Map<String, String> totalData);
     public abstract boolean supports(Annotation annotation);
 
 }

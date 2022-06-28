@@ -13,9 +13,8 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Component;
 
 import java.lang.annotation.Annotation;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Aspect
 @Component
@@ -26,7 +25,7 @@ public class AggregateDataAspect {
     private final AggregateRetry aggregateRetry;
     private final ThreadPoolTaskScheduler taskScheduler;
 
-    private final HashMap<String, String> totalData = new LinkedHashMap<>();
+    private final Map<String, String> totalData = new ConcurrentHashMap<>();
 
     public AggregateDataAspect(AggregateRetry aggregateRetry, ThreadPoolTaskScheduler taskScheduler) {
         this.aggregateRetry = aggregateRetry;
