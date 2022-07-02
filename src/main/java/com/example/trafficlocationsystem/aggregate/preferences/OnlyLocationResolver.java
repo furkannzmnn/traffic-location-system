@@ -8,9 +8,9 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.IntStream;
 
-@Component
 public class OnlyLocationResolver<T> extends AbstractAggregatePreferences<T>{
 
     private static final String JSON_PREFIX = "\n";
@@ -21,9 +21,10 @@ public class OnlyLocationResolver<T> extends AbstractAggregatePreferences<T>{
             HttpClient httpClient = HttpClient.newHttpClient();
             try {
                 final HttpRequest httpRequest1 = HttpRequest.newBuilder().uri(URI.create(GEO_URL)).build();
-                final HttpResponse<String> response = httpClient.send(httpRequest1, HttpResponse.BodyHandlers.ofString());
+                final CompletableFuture<HttpResponse<String>> async = httpClient
+                        .sendAsync(httpRequest1, HttpResponse.BodyHandlers.ofString());
 
-                final String body = response.body();
+                final String body = async.join().body();
 
                 final Converter<String, String>  typeConverter = (convert) -> {
                     ObjectMapper objectMapper = new ObjectMapper();
