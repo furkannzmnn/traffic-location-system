@@ -3,16 +3,11 @@ package com.example.trafficlocationsystem.aggregate.preferences;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.UnknownHostException;
 import java.util.Map;
 
 public abstract class AbstractAggregatePreferences<T> {
-
     protected static final Logger LOGGER = LoggerFactory.getLogger(AbstractAggregatePreferences.class);
     protected static final String EMPTY_DEVICE_NOT_FOUND = "NOT RESOLVER DEVICE INFO";
-
-
-
 
     public void completeProcess(T request, Map<String, String> totalData) {
         final String info = onlyPreferences(request,totalData);

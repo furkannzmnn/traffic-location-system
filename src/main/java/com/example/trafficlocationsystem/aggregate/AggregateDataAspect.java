@@ -15,9 +15,8 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Component;
 
 import java.lang.annotation.Annotation;
-import java.net.UnknownHostException;
-import java.time.Instant;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Aspect
@@ -42,7 +41,7 @@ public class AggregateDataAspect {
     @Around("@annotation(com.example.trafficlocationsystem.annatotion.AggregateData)")
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable  {
         try {
-            taskScheduler.schedule(() -> sendData(joinPoint), Instant.now());
+            CompletableFuture.runAsync(() -> sendData(joinPoint));
         }catch (Exception e){
             taskScheduler.submit(() -> aggregateRetry.retry(() -> sendData(joinPoint)));
         }
