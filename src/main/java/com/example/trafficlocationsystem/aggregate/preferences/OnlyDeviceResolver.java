@@ -1,9 +1,12 @@
 package com.example.trafficlocationsystem.aggregate.preferences;
 
+import org.springframework.stereotype.Component;
+
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
+@Component
 public class OnlyDeviceResolver<T> extends AbstractAggregatePreferences<T>{
     @Override
     public String onlyPreferences(T request, Map<String, String> totalData) {

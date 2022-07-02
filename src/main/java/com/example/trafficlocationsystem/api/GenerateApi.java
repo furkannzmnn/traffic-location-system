@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/api")
@@ -21,9 +22,9 @@ public class GenerateApi {
         this.sendDataTopic = sendDataTopic;
     }
 
-    @AggregateData(onlyDevice = true)
+    @AggregateData(onlyLocation = true)
     @PostMapping("/sendData")
-    public ResponseEntity<?> generateData(HttpServletRequest request) {
+    public ResponseEntity<?> generateData(HttpServletRequest request, HttpServletResponse response) {
         sendDataTopic.sendData("data");
         return ResponseEntity.ok("ok");
     }
