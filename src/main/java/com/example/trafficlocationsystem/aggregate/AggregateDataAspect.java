@@ -49,7 +49,7 @@ public class AggregateDataAspect {
     }
 
 
-    private void sendData(ProceedingJoinPoint joinPoint) {
+    private void sendData(ProceedingJoinPoint joinPoint)  {
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
 
         // get method annotations

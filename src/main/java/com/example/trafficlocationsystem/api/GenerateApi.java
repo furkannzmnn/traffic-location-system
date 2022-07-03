@@ -24,7 +24,7 @@ public class GenerateApi {
 
     @AggregateData(onlyLocation = true)
     @PostMapping("/sendData")
-    public ResponseEntity<?> generateData(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<?> generateData(HttpServletRequest request) {
         sendDataTopic.sendData("data");
         return ResponseEntity.ok("ok");
     }

@@ -14,7 +14,7 @@ import java.util.stream.IntStream;
 public class OnlyLocationResolver<T> extends AbstractAggregatePreferences<T> {
 
     private static final String JSON_PREFIX = "\n";
-    private static final String GEO_URL = "http://ip-api.com/line/";
+    private static final String GEO_URL = "http://ip-api.com/line";
 
     @Override
     public String onlyPreferences(T request, Map<String, String> totalData) {
