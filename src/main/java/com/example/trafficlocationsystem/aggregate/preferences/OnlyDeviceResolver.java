@@ -11,7 +11,7 @@ public class OnlyDeviceResolver<T> extends AbstractAggregatePreferences<T>{
             final HttpServletRequest httpRequest = (HttpServletRequest) request;
             final String header = httpRequest.getHeader("User-Agent");
             totalData.put("deviceName", header);
-            return header;
+            return "Device success to send";
         }
         return EMPTY_DEVICE_NOT_FOUND;
     }

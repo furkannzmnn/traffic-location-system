@@ -16,6 +16,6 @@ public class PatchMappingResolver extends AbstractAnnotationResolver {
 
     @Override
     public boolean supports(Annotation annotation) {
-        return annotation instanceof PatchMapping;
+        throw new UnsupportedOperationException();
     }
 }

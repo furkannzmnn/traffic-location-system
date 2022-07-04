@@ -38,7 +38,7 @@ public class OnlyLocationResolver<T> extends AbstractAggregatePreferences<T> {
                 merge(totalData, divideData);
             }
 
-            return toJson;
+            return "Location success to send";
 
         } catch (Exception e) {
             e.printStackTrace();
