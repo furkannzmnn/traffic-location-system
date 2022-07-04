@@ -18,7 +18,7 @@ public abstract class AbstractAggregatePreferences<T> {
         if (isDevice && isLocation) return new BothResolver<>();
         if (isDevice) return new OnlyDeviceResolver<>();
         else if (isLocation) return new OnlyLocationResolver<>();
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     public abstract String onlyPreferences(T request, Map<String, String> totalData);

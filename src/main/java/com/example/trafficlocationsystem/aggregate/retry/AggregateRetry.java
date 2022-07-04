@@ -13,7 +13,8 @@ public class AggregateRetry {
 
     public void retry(Runnable runnable) {
         try {
-            runnable.run();
+           TaskRetry taskRetry = (task) -> runnable.run();
+           taskRetry.retry(runnable);
         }catch (Exception e){
             this.retryCount++;
             if(this.retryCount <= 3){

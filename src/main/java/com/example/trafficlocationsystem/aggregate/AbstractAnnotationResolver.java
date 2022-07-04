@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.annotation.Annotation;
-import java.util.HashMap;
 import java.util.Map;
 
 public abstract class AbstractAnnotationResolver {
